@@ -666,6 +666,11 @@ require('lazy').setup({
     end,
   },
 
+  -- java development
+  {
+    'mfussenegger/nvim-jdtls',
+  },
+
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
