@@ -637,7 +637,22 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
-
+        yamlls = {
+          settings = {
+            yaml = {
+              schemas = {
+                -- Add custom schemas here
+                ['https://json.schemastore.org/github-workflow'] = '/.github/workflows/*', -- Example for GitHub Actions
+                ['https://json.schemastore.org/github-action'] = '/action.yml', -- Example for GitHub Actions
+                ['https://json.schemastore.org/kubernetes'] = '/*.k8s.yaml', -- Example for Kubernetes
+                -- Add your custom schema:
+                ['/Users/qiming.he/journal/schema.json'] = '/Users/qiming.he/journal/*.yaml',
+              },
+              validate = true, -- Enable schema validation
+              format = { enable = true }, -- Enable YAML formatting
+            },
+          },
+        },
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
