@@ -604,6 +604,7 @@ require('lazy').setup({
         -- clangd = {},
         gopls = {},
         taplo = {}, -- TOML LSP
+        jsonls = {}, -- JSON LSP
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -895,7 +896,7 @@ require('lazy').setup({
     branch = 'main',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
-      local parsers = { 'bash', 'c', 'diff', 'go', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'toml', 'vim', 'vimdoc' }
+      local parsers = { 'bash', 'c', 'diff', 'go', 'html', 'json', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'toml', 'vim', 'vimdoc' }
       require('nvim-treesitter').install(parsers)
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)
