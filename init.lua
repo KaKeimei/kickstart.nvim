@@ -605,7 +605,7 @@ require('lazy').setup({
         gopls = {},
         taplo = {}, -- TOML LSP
         jsonls = {}, -- JSON LSP
-        -- pyright = {},
+        pyright = {}, -- Python LSP
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -673,6 +673,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         -- You can add other tools here that you want Mason to install
+        'isort', -- Python import sorter
+        'black', -- Python formatter
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -726,7 +728,7 @@ require('lazy').setup({
         typscript = { 'prettierd', 'prettier' },
         typescriptreact = { 'prettierd', 'prettier' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
