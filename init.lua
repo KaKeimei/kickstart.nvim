@@ -590,7 +590,9 @@ require('lazy').setup({
           --
           -- This may be unwanted, since they displace some of your code
           if client and client:supports_method('textDocument/inlayHint', event.buf) then
-            map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+            map('<leader>th', function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+            end, '[T]oggle Inlay [H]ints')
           end
         end,
       })
@@ -638,7 +640,9 @@ require('lazy').setup({
           on_init = function(client)
             if client.workspace_folders then
               local path = client.workspace_folders[1].name
-              if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
+              if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
+                return
+              end
             end
 
             client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
@@ -749,7 +753,9 @@ require('lazy').setup({
           -- Build Step is needed for regex support in snippets.
           -- This step is not supported in many windows environments.
           -- Remove the below condition to re-enable on windows.
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then return end
+          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
+            return
+          end
           return 'make install_jsregexp'
         end)(),
         dependencies = {
@@ -898,17 +904,36 @@ require('lazy').setup({
     branch = 'main',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
-      local parsers = { 'bash', 'c', 'diff', 'go', 'html', 'java', 'json', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'python', 'query', 'sql', 'toml', 'vim', 'vimdoc', 'yaml' }
+      -- Parsers to install, grouped for readability
+      local parsers = vim
+        .iter({
+          { 'bash', 'c', 'diff', 'lua', 'luadoc', 'query', 'regex', 'vim', 'vimdoc' }, -- core / editor
+          { 'gitattributes', 'gitcommit', 'gitignore' }, -- git
+          { 'groovy', 'java', 'kotlin', 'properties', 'scala' }, -- jvm
+          { 'csv', 'html', 'ini', 'json', 'markdown', 'markdown_inline', 'sql', 'toml', 'xml', 'yaml' }, -- data / markup / config
+          { 'cmake', 'dockerfile', 'hcl', 'make', 'proto' }, -- infra
+          { 'css', 'graphql', 'javascript', 'scss', 'tsx', 'typescript' }, -- web
+          { 'c_sharp', 'cpp', 'go', 'php', 'python', 'ruby', 'rust', 'swift', 'zig' }, -- other languages
+        })
+        :flatten()
+        :totable()
       require('nvim-treesitter').install(parsers)
+
+      -- Filetypes with no parser of their own, reusing a compatible one
+      vim.treesitter.language.register('json', 'jsonc')
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)
           local buf, filetype = args.buf, args.match
 
           local language = vim.treesitter.language.get_lang(filetype)
-          if not language then return end
+          if not language then
+            return
+          end
 
           -- check if parser exists and load it
-          if not vim.treesitter.language.add(language) then return end
+          if not vim.treesitter.language.add(language) then
+            return
+          end
           -- enables syntax highlighting and other treesitter features
           vim.treesitter.start(buf, language)
 
